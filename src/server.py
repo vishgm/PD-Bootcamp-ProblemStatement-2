@@ -1,19 +1,15 @@
 import streamlit as st
 import pandas as pd
 
-import model
+# import model
 
+from model import TestModel, TRAINED_MODEL_PATH
 
-
-
-def predict(age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,slope,ca,thal):
-    prediction=model.predict([[age,sex,cp,trestbps,chol,fbs,restecg,thalach,exang,oldpeak,slope,ca,thal]])
-    return prediction
     
 def start_server():
-    st.title("Problem Statement 1: Heart Disease Prediction")
-    st.markdown("* Classification of a specific heart disease using machine learning techniques. ")
-    st.markdown("   > Objective: To build a machine learning model, that can detect between a subject afflicted with heart disease and someone who is normal")
+    st.title("Problem Statement 2: Insurance Claim Prediction")
+    # st.markdown("* Classification of a specific heart disease using machine learning techniques. ")
+    st.markdown("   > Objective: To build a machine learning model, that can predict whether a claim is going to be Approved, Denied, or settled")
     
     # html_temp = """
     # <div style="background-color:tomato;padding:10px">
@@ -24,134 +20,183 @@ def start_server():
 
     st.divider()
     st.subheader("Enter Data below:")
-    age = st.number_input("Age",0,100, 25)
-    sex = st.radio("Sex", ['Male', 'Female'])
-    cp = st.selectbox("CP",['Value 0', 'Value 1', 'Value 2','Value 3'])
-    trestbps = st.number_input("Tres BP",0,140)
-    chol = st.number_input("Cholestrol",0,500)
-    fbs=st.number_input("FBS",0,300)
-    restecg = st.selectbox("Restecg",['Value 0', 'Value 1', 'Value 2'])
-    thalach=st.number_input("Thalach",0,300)
-    exang=st.radio("Exang", ['Yes', 'No'])
-    oldpeak=st.text_input("Old Peak","2.1")
-    slope =st.selectbox("Slope",['Value 0', 'Value 1', 'Value 2'])
-    ca=st.selectbox("Ca",['Value 0', 'Value 1', 'Value 2'])
-    thal=st.selectbox("Thal",['Normal', 'Fixed defect', 'Reversable defect'])
+    claim_no = st.number_input("Claim Number",0,10000, 1002)
+    incident_date = st.date_input("Incident Date")
+    date_received = st.date_input("Claim Date")
     
+    city_code = st.number_input("City code",0,500)
+    City =st.selectbox("City", ['Mumbai', 'Bangalore', 'Jaipur'])
+    prod_insured = st.selectbox("Enterprise type",[
+        'Cameras and other Misc. Security Equipment', 
+        'Fixtures', 
+        'Furnitures'
+        ])
+    claim_type=st.selectbox("claim type",['Property Loss'])
+    claim_site =st.radio("Claim site", ['In Transit', 'Warehouse'])
+    ent_type =st.selectbox("Enterprise type",['Public Limited Company','Sole Proprietorship'])
+    claim_amt =st.number_input("Claim amount",0,10000)
+    close_amt =st.number_input("Close amount",0,10000)
+    
+    st.divider()
+
+    st.header("OR")
+
+    test_file = st.file_uploader("Upload Test data here")
+
+    
+    
+
+
     result=""
     if st.button("Predict"):
-        # try:
-        columns = ['age',
-                'trestbps',
-                'chol',
-                'fbs',
-                'restecg',
-                'thalach',
-                'oldpeak',
-                'cp_0',
-                'cp_1',
-                'cp_2',
-                'cp_3',
-                'thal_0',
-                'thal_1',
-                'thal_2',
-                'slope_0',
-                'slope_1',
-                'slope_2',
-                'ca_0',
-                'ca_1',
-                'ca_2',
-                'ca_3',
-                'restecg_0',
-                'restecg_1',
-                'restecg_2']
+        if test_file:
+            test_data_df = pd.read_csv(test_file)
+
+        # else:
+        #     # try:
+        #     columns = ['age',
+        #                'sex',
+        #             'trestbps',
+        #             'chol',
+        #             'fbs',
+        #             'restecg',
+        #             'thalach',
+        #             'oldpeak',
+        #             'cp_0',
+        #             'cp_1',
+        #             'cp_2',
+        #             'cp_3',
+        #             'thal_0',
+        #             'thal_1',
+        #             'thal_2',
+        #             'slope_0',
+        #             'slope_1',
+        #             'slope_2',
+        #             'ca_0',
+        #             'ca_1',
+        #             'ca_2',
+        #             'ca_3',
+        #             'restecg_0',
+        #             'restecg_1',
+        #             'restecg_2']
+            
+        #     pd_cols_dict = {k: 0 for k in columns}
+
+        #     if oldpeak:
+        #         oldpeak = float(oldpeak)
+            
+
+        #     pd_cols_dict['age'] = age
+        #     pd_cols_dict['trestbps'] = trestbps
+        #     pd_cols_dict['chol'] = chol
+        #     # pd_cols_dict['restecg'] = restecg
+        #     pd_cols_dict['thalach'] = thalach
+        #     pd_cols_dict['oldpeak'] = oldpeak
+
         
-        pd_cols_dict = {k: 0 for k in columns}
+        #     if sex:
+        #         if sex == "Male":
+        #             pd_cols_dict['sex'] = 1
+                    
+        #         elif sex == "Female":
+        #             pd_cols_dict['sex'] = 0
+                    
+        #     if fbs:
+        #         if fbs > 120:
+        #             pd_cols_dict['fbs'] = 1
+        #         else:
+        #             pd_cols_dict['fbs'] = 0
+                    
 
-        if oldpeak:
-            oldpeak = float(oldpeak)
-        
 
-        pd_cols_dict['age'] = age
-        pd_cols_dict['trestbps'] = trestbps
-        pd_cols_dict['chol'] = chol
-        # pd_cols_dict['restecg'] = restecg
-        pd_cols_dict['thalach'] = thalach
-        pd_cols_dict['oldpeak'] = oldpeak
+        #     if cp:
+        #         if cp == "Value 0":
+        #             pd_cols_dict['cp_0'] = 1
+        #         if cp == "Value 1":
+        #             pd_cols_dict['cp_1'] = 1
+        #         if cp == "Value 2":
+        #             pd_cols_dict['cp_2'] = 1
+        #         if cp == "Value 3":
+        #             pd_cols_dict['cp_3'] = 1
 
-    
-        if fbs:
-            if fbs > 120:
-                pd_cols_dict['fbs'] = 1
-            else:
-                pd_cols_dict['fbs'] = 0
+        #     # if thal:
+        #     #     if thal == "Value 0":
+        #     #         pd_cols_dict['thal_0'] = 1
+        #     #     if thal == "Value 1":
+        #     #         pd_cols_dict['thal_1'] = 1
+        #     #     if thal == "Value 2":
+        #     #         pd_cols_dict['thal_2'] = 1
+            
+        #     if slope:
+        #         if slope == "Value 0":
+        #             pd_cols_dict['slope_0'] = 1
+        #         if slope == "Value 1":
+        #             pd_cols_dict['slope_1'] = 1
+        #         if slope == "Value 2":
+        #             pd_cols_dict['slope_2'] = 1
+            
+        #     if ca:
+        #         if ca == "Value 0":
+        #             pd_cols_dict['ca_0'] = 1
+        #         if ca == "Value 1":
+        #             pd_cols_dict['ca_1'] = 1
+        #         if ca == "Value 2":
+        #             pd_cols_dict['ca_2'] = 1
+            
+        #     if restecg:
+        #         if restecg == "Value 0":
+        #             pd_cols_dict['restecg_0'] = 1
+        #         if restecg == "Value 1":
+        #             pd_cols_dict['restecg_1'] = 1
+        #         if restecg == "Value 2":
+        #             pd_cols_dict['restecg_2'] = 1
                 
-
-
-        if cp:
-            if cp == "Value 0":
-                pd_cols_dict['cp_0'] = 1
-            if cp == "Value 1":
-                pd_cols_dict['cp_1'] = 1
-            if cp == "Value 2":
-                pd_cols_dict['cp_2'] = 1
-            if cp == "Value 3":
-                pd_cols_dict['cp_3'] = 1
-
-        # if thal:
-        #     if thal == "Value 0":
-        #         pd_cols_dict['thal_0'] = 1
-        #     if thal == "Value 1":
-        #         pd_cols_dict['thal_1'] = 1
-        #     if thal == "Value 2":
-        #         pd_cols_dict['thal_2'] = 1
-        
-        if slope:
-            if slope == "Value 0":
-                pd_cols_dict['slope_0'] = 1
-            if slope == "Value 1":
-                pd_cols_dict['slope_1'] = 1
-            if slope == "Value 2":
-                pd_cols_dict['slope_2'] = 1
-        
-        if ca:
-            if ca == "Value 0":
-                pd_cols_dict['ca_0'] = 1
-            if ca == "Value 1":
-                pd_cols_dict['ca_1'] = 1
-            if ca == "Value 2":
-                pd_cols_dict['ca_2'] = 1
-        
-        if restecg:
-            if restecg == "Value 0":
-                pd_cols_dict['restecg_0'] = 1
-            if restecg == "Value 1":
-                pd_cols_dict['restecg_1'] = 1
-            if restecg == "Value 2":
-                pd_cols_dict['restecg_2'] = 1
+        #     if thal:
+        #         if thal == "Normal":
+        #             pd_cols_dict['thal_0'] = 1
+        #         if thal == "Fixed defect":
+        #             pd_cols_dict['thal_1'] = 1
+        #         if thal == "Reversable defect":
+        #             pd_cols_dict['thal_2'] = 1
+                
             
-        if thal:
-            if thal == "Normal":
-                pd_cols_dict['thal_0'] = 1
-            if thal == "Fixed defect":
-                pd_cols_dict['thal_1'] = 1
-            if thal == "Reversable defect":
-                pd_cols_dict['thal_2'] = 1
-            
-        
 
-        print(pd_cols_dict)
-        test_data_df = pd.DataFrame(pd_cols_dict, index=[0])
+        #     print(pd_cols_dict)
+        #     test_data_df = pd.DataFrame(pd_cols_dict, index=[0])
+
+        #     st.write("Test data")
+        #     st.dataframe(test_data_df)
+
+        
+        
+        # print(test_data_df.values.tolist())
+
+        test_path = "../data/test/pred_df.csv"
+
+        # cat_vars = ['City Code','City','Enterprise Type','Claim Type','Claim Site','Product Insured']
+
+        # temp_df = pd.get_dummies(data=test_data_df, columns=cat_vars,dtype=int,drop_first=True)
+
+        # temp_df.drop([ 'Claim Number','Incident Date','Date Received'],axis=1,inplace=True)
+        # temp_df = temp_df.reset_index(drop=True)
 
         # st.dataframe(test_data_df)
-        
-        test_data_df.to_csv("pred_class_zero.csv", index=False)
-        print(test_data_df.values.tolist())
 
+        test_data_df.to_csv("../data/test/pred_df.csv", index=False)
 
         
-        result=model.predict(test_data_df.values.tolist())
-        st.success('The output is {}'.format(result))
+        test_model = TestModel(model_path=TRAINED_MODEL_PATH, test_data_path=test_path)
+
+        test_model.load_model()
+
+
+        predictions_df = test_model.predict()
+        
+        
+
+        st.success("Predictions complete")
+
+        st.dataframe(predictions_df)
 
         # except Exception as e:
         #     st.error(f"error: {e}")
