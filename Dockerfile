@@ -3,4 +3,4 @@ WORKDIR /pythondir
 COPY . /pythondir
 EXPOSE 8501
 RUN pip install -r requirements.txt
-CMD cd src && streamlit run server.py
+CMD cd src && streamlit run server.py --server.port 8502
