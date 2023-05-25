@@ -1,7 +1,4 @@
-# PD-Bootcamp-ProblemStatement-2
-Group 2 - Problem statetment 2
-
-Problem Statement 2 - Insurance claim prediction
+Problemt Statement 1 - Classification of heart disease
 
 data 
 	- train: Training data for models
